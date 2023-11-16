@@ -1,0 +1,124 @@
+<div class="card">
+  <div>
+    <small *ngIf="dbTrials != undefined" class="block bg-primary-500 p-2 border-round text-white" i18n>
+      Student data from the online system has been loaded. Please select the academic and click the button below to reload.
+    </small>
+    <small *ngIf="dbTrials == undefined" class="block bg-red-500 p-2 border-round text-white">
+      Student data from the online system has not been loaded yet. Please select the academic year and click the button below to continue
+    </small>
+  </div>
+  <div class="shadow-1 border-round-sm m-2 p-2 flex gap-2 align-content-center">
+    <div>
+      <p-dropdown [(ngModel)]="selectedYear" placeholder="Select Academic Year" styleClass="w-full p-inputtext-sm"  [options]="getSchoolYears()" optionLabel="name"></p-dropdown>
+    </div>
+    <div>
+      <p-button [disabled]="selectedYear == undefined" label="Load Student Data" (click)="loadStudentAction()" [loading]="loadingStudentData" styleClass="p-button-sm"></p-button>
+    </div>
+    <div *ngIf="jsonRepoData?.trialLoadedAt">
+      <span i18n>Student data was last loaded on: {{dbTrialLoadDate}}</span>
+    </div>
+  </div>
+  <div class="py-2 lg:py-4">
+    <p-table [tableStyle]="{ 'min-width': '50rem' }" [value]="records">
+      <ng-template pTemplate="header">
+        <tr>
+          <th i18n>Name</th>
+          <th i18n>Reg. No</th>
+          <th i18n>Class Level</th>
+          <th i18n>Section</th>
+          <th i18n>Amount</th>
+          <th i18n>Action</th>
+        </tr>
+      </ng-template>
+      <ng-template let-record pTemplate="body">
+        <tr>
+          <td>
+            <p-dropdown
+              appendTo="body" [(ngModel)]="record.name"
+              [options]="dbTrials ?? []" optionLabel="student.name" [editable]="true" [filter]="true"
+              [virtualScroll]="true" [virtualScrollItemSize]="20" styleClass="p-inputtext-sm"
+              (onChange)="dbTrialSelectAction($event, record)"></p-dropdown>
+          </td>
+          <td>
+            {{record.identifier}}
+          </td>
+          <td>
+            {{record.classLevel}}
+          </td>
+          <td>
+            {{record.section}}
+          </td>
+          <td>
+            <input [(ngModel)]="record.money.amount" class="w-full p-inputtext-sm" pInputText type="text">
+          </td>
+          <td>
+            <div class="flex gap-1">
+              <p-button (click)="recordView(record)" label="View" i18n-label styleClass="p-button-sm"></p-button>
+              <p-button (click)="dbUpdateRecords()" label="Save" i18n-label styleClass="p-button-sm"></p-button>
+              <p-button (click)="recordPrintReceipt(record)" label="Print" i18n-label styleClass="p-button-sm"></p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="footer">
+        <tr>
+          <td colspan="6">
+            <div class="flex gap-1">
+              <p-inputNumber #entryInput [max]="20" [min]="1" inputStyleClass="p-inputtext-sm"
+                             styleClass="w-full"></p-inputNumber>
+              <p-button (click)="addRecordEntry(entryInput.value ?? 1)" [icon]="picon('plus')"
+                        i18n-pTooltip pTooltip="Add {{entryInput.value ?? 1}} student entries" styleClass="p-button-sm p-button-icon"></p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<p-dialog
+  [(visible)]="studentDetailsDialogVisible" [draggable]="false" [modal]="true" [resizable]="false" [style]="{ width: '50vw' }"
+  header="Student Details" i18n-header>
+  <p-table *ngIf="selectedRecordTrial"
+    [value]="selectedRecordTrial.tuitionPaymentStatus.payments" dataKey="tuitionPaymentId"
+    i18n-title
+    selectionMode="multiple" title="Tuition Details">
+    <ng-template pTemplate="caption">
+      <div class="grid">
+        <div class="col-12 md:col-3 block">
+          <span class="font-bold" i18n>Tuition amount</span>
+          &nbsp;:&nbsp;
+          <span>{{formatMoney(selectedRecordTrial.tuitionPaymentStatus.feeAmount)}}</span>
+        </div>
+        <div class="col-6 md:col-3 block">
+          <span class="font-bold" i18n>Total Paid</span>
+          &nbsp;:&nbsp;
+          <span>{{tuitionPaymentsSumAsMoney(selectedRecordTrial.tuitionPaymentStatus.payments)}}</span>
+        </div>
+        <div class="col-6 md:col-3 block">
+          <span class="font-bold" i18n>Total Owed</span>
+          &nbsp;:&nbsp;
+          <span>{{formatMoney(selectedRecordTrial.tuitionPaymentStatus.owed)}}</span>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th i18n>Date</th>
+        <th i18n>Amount</th>
+      </tr>
+    </ng-template>
+    <ng-template let-p pTemplate="body">
+      <tr>
+        <td>{{displayDate(p.paymentDate)}}</td>
+        <td>{{formatMoney(p.money)}}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-dialog>
+
+
+<app-payment-receipt *ngIf="printReceipt" [print]="printReceipt" [trialDetail]="selectedTrialDetail"></app-payment-receipt>
+<p-dialog>
+
+</p-dialog>

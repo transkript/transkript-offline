@@ -1,0 +1,21 @@
+{
+  "locale": "en-US",
+  "translations": {
+    "1519954996184640001": "Error",
+    "2112337235463506698": "Unknown error occurred. Please report this to the control desk!",
+    "8398799011752101148": " Student data from the online system has been loaded. Please select the academic and click the button below to reload. ",
+    "3768927257183755959": "Save",
+    "7049887240439736400": "Print",
+    "8070774267954518469": "Add Student Entries",
+    "7841438097666236755": "Academic Year",
+    "2593007815199532062": "Section",
+    "4021059841853593852": "Class Level",
+    "5012084291992448490": "Fees",
+    "2668864227584228682": "Welcome Back",
+    "1462375679514506013": "Username / Email",
+    "1431416938026210429": "Password",
+    "840692109692540367": "Sign In",
+    "8829497237648100098": "Filter",
+    "7808756054397155068": "Reset"
+  }
+}
