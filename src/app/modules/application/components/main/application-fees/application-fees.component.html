@@ -35,7 +35,7 @@
           <td>
             <p-dropdown
               appendTo="body" [(ngModel)]="record.name"
-              [options]="dbTrials ?? []" optionLabel="student.name" [editable]="true" [filter]="true"
+              [options]="dbTrials" optionLabel="student.name" [editable]="true" [filter]="true"
               [virtualScroll]="true" [virtualScrollItemSize]="20" styleClass="p-inputtext-sm"
               (onChange)="dbTrialSelectAction($event, record)"></p-dropdown>
           </td>
@@ -43,7 +43,10 @@
             {{record.identifier}}
           </td>
           <td>
-            {{record.classLevel}}
+            <p-dropdown
+              [pTooltip]="feeAmountForClassLevel(record)" [ngModel]="record.classLevel" [options]="dbClassLevels" [editable]="true" [filter]="true"
+              appendTo="body" styleClass="p-inputtext-sm" optionLabel="name"
+              (onChange)="dbClassLevelSelectAction($event, record)"></p-dropdown>
           </td>
           <td>
             {{record.section}}
@@ -55,6 +58,7 @@
             <div class="flex gap-1">
               <p-button (click)="recordView(record)" label="View" i18n-label styleClass="p-button-sm"></p-button>
               <p-button (click)="dbUpdateRecords()" label="Save" i18n-label styleClass="p-button-sm"></p-button>
+              <br>
               <p-button (click)="recordPrintReceipt(record)" label="Print" i18n-label styleClass="p-button-sm"></p-button>
             </div>
           </td>

@@ -1,4 +1,6 @@
 import {YearModel} from "../cycle/year.model";
+import {Money} from "../base/money.model";
+import {Id} from "../base/base.types";
 
 export interface LaunchResponse {
   schoolId?: number,
@@ -23,6 +25,7 @@ export interface SchoolData {
   schoolName: string,
   stats: SchoolStats,
   academicYears: YearModel[]
+  classLevels: LaunchClassLevelModel[]
 }
 
 export interface SchoolStats {
@@ -30,4 +33,12 @@ export interface SchoolStats {
   numberOfStudents: number,
   numberOfDepartments: number,
   numberOfSubjects: number
+}
+
+export interface LaunchClassLevelModel{
+  id: Id,
+  name: string
+  section: string
+  feeAmount: Money
+  schoolId: Id
 }

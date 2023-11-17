@@ -3,7 +3,7 @@ import {StudentApplicationTrialPayload} from "../../models/student/student-appli
 import {UserPayload} from "../../models/user/user.payload";
 import {LocalStoragePreset} from "lowdb/browser";
 import {YearModel} from "../../models/cycle/year.model";
-import {LaunchResponse} from "../../models/auth/launch.model";
+import {LaunchClassLevelModel, LaunchResponse} from "../../models/auth/launch.model";
 import {SchoolModel} from "../../models/school/school.model";
 import {Subject} from "rxjs";
 import {LocalStorageService} from "../http/local-storage.service";
@@ -16,7 +16,8 @@ export class JsonRepoService {
   accessSubject: Subject<"r" | "w"> = new Subject<"r" | "w">();
   private defaultData: JsonRepo = {
     trials: [],
-    academicYears: []
+    classLevels: [],
+    academicYears: [],
   }
 
   constructor(private localStorage: LocalStorageService) { }
@@ -63,6 +64,7 @@ export type JsonRepo = {
   trials: StudentApplicationTrialPayload[],
   trialLoadedAt?: Date,
   academicYears: YearModel[]
+  classLevels: LaunchClassLevelModel[]
   paymentRecords?: PaymentRecordModel[],
   launchData?: LaunchResponse,
   currentUser?: UserPayload,
@@ -77,4 +79,5 @@ type JsonRepoValueTypes =
   LaunchResponse |
   YearModel[] |
   PaymentRecordModel[] |
+  LaunchClassLevelModel[] |
   StudentApplicationTrialPayload[]

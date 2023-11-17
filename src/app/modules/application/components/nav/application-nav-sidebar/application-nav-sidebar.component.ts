@@ -41,8 +41,12 @@ export class ApplicationNavSidebarComponent extends AbstractComponent implements
       const launchFilter = new LaunchFilter({ schoolId: selectedSchool.id });
       this.authService.launch(launchFilter).subscribe( res => {
         const academicYears = res.schoolData?.academicYears ?? [];
-        this.jsonRepoService.update("launchData", res).then();
-        this.jsonRepoService.update("academicYears", academicYears).then();
+        const classLevels = res.schoolData?.classLevels ?? [];
+        this.jsonRepoService.updateAll([
+          { key: "launchData", data: res },
+          { key: "academicYears", data: academicYears },
+          { key: "classLevels", data: classLevels },
+        ]).then();
       });
     });
   }

@@ -31,7 +31,7 @@ const html=  `
 
       body {
         font-family: 'Comfortaa', Arial, sans-serif;
-        font-size: 0.56em;
+        font-size: 0.72em;
         background-color: #dcdcdc;
         transform: scale(0.7,0.7);
         transform-origin: top left right;
@@ -139,6 +139,9 @@ const html=  `
         background-color: #fff;
       }
       .wrapper-invoice .invoice .invoice-body .table tbody tr td:nth-child(2) {
+        text-align: left;
+      }
+      .wrapper-invoice .invoice .invoice-body .table tbody tr td:nth-child(3) {
         text-align: right;
       }
       .wrapper-invoice .invoice .invoice-body .flex-table {
@@ -303,29 +306,35 @@ const html=  `
 
 
 export const paymentReceipt = (trialDetail: {
-  payload: StudentApplicationTrialPayload,
+  payload?: StudentApplicationTrialPayload,
   record: PaymentRecordModel,
   school: SchoolModel,
 }) => {
-  const payments = trialDetail.payload.tuitionPaymentStatus.payments;
+  const payments = trialDetail.payload?.tuitionPaymentStatus.payments ?? [];
   payments.push({
     money: trialDetail.record.money,
     paymentDate: <any>formatDate(today(), dateTimeFormat, LSLanguage()),
     paymentId: '',
     tuitionPaymentId: '',
   });
-  const feeAmnt = formatMoney(trialDetail.payload.tuitionPaymentStatus.feeAmount);
-  const feeOwed = formatMoney(trialDetail.payload.tuitionPaymentStatus.owed);
+
+  const feeAmnt = formatMoney(trialDetail.payload?.tuitionPaymentStatus.feeAmount ?? trialDetail.record.feeAmount);
+  const feeOwed = formatMoney(trialDetail.payload?.tuitionPaymentStatus.owed ?? (() => {
+    const owed = trialDetail.record.feeAmount.amount - trialDetail.record.money.amount;
+    return { amount: owed, currency: trialDetail.record.feeAmount.currency}
+  })());
   const feePaid = tuitionPaymentsSumAsMoney(payments);
+
+  const classLevel = `${trialDetail.payload?.classLevel ?? trialDetail.record.classLevel} - ${trialDetail.payload?.section?? trialDetail.record.section}`
 
   const template = Handlebars.compile(html);
 
   return template({
     value_school_name: trialDetail.school.name,
     value_school_code: trialDetail.school.code ?? '',
-    value_student_name: trialDetail.payload.student.name,
-    value_student_identifier: trialDetail.payload.student.accountId,
-    value_student_class_level:`${trialDetail.payload.classLevel} - ${trialDetail.payload.section}`,
+    value_student_name: trialDetail.payload?.student.name ,
+    value_student_identifier: trialDetail.payload?.student.accountId ?? trialDetail.record.identifier,
+    value_student_class_level: classLevel,
     value_created_on: displayDate(<any>formatDate(today(), dateTimeFormat, LSLanguage())),
     value_fee_amount: feeAmnt,
     value_fee_owed: feeOwed,
@@ -341,8 +350,8 @@ export const paymentReceipt = (trialDetail: {
     text_payment_desc: $localize`Description`,
     text_payment_amnt: $localize`Amount`,
     text_payment_date: $localize`Date`,
-    text_fee_amount: $localize`Sub Total`,
-    text_fee_paid: $localize`Completed`,
+    text_fee_amount: $localize`Fee Amount`,
+    text_fee_paid: $localize`Fee Paid`,
     text_fee_owed: $localize`Remaining`,
     text_signature: $localize`Bursar's Signature`,
   });

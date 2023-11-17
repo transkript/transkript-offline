@@ -1,7 +1,7 @@
 import {Component, OnInit, Renderer2} from '@angular/core';
 import {TrialService} from "../../../../../services/http/trial.service";
 import {BaseFilter, SchoolBaseFilter} from "../../../../../config/filter/base.filter";
-import {Subscription} from "rxjs";
+import {Subject, Subscription} from "rxjs";
 import {FormControlModel} from "../../../../library/models/data/form-control.model";
 import {FormModel} from "../../../../library/models/data/form.model";
 import {TrialFilter, TrialFilterParams} from "../../../../../config/filter/trial.filter";
@@ -18,6 +18,7 @@ import {tuitionPaymentsSumAsMoney} from "../../../../../models/payment/payment-t
 import {PrintReceiptService} from "../../../../../services/util/print-receipt.service";
 import {LSLanguage} from "../../../../../services/http/local-storage.service";
 import {SchoolModel} from "../../../../../models/school/school.model";
+import {LaunchClassLevelModel} from "../../../../../models/auth/launch.model";
 
 @Component({
   selector: 'app-application-fees',
@@ -31,9 +32,14 @@ export class ApplicationFeesComponent extends AbstractComponent implements OnIni
   loadingStudentData = false;
   studentDetailsDialogVisible = false;
   selectedRecord?: PaymentRecordModel;
+  printReceipt = 0;
+  protected readonly formatMoney = formatMoney;
+  protected readonly tuitionPaymentsSumAsMoney = tuitionPaymentsSumAsMoney;
+  protected readonly displayDate = displayDate;
+
 
   selectedTrialDetail?: {
-    payload: StudentApplicationTrialPayload,
+    payload?: StudentApplicationTrialPayload,
     record: PaymentRecordModel,
     school: SchoolModel,
   }
@@ -52,6 +58,9 @@ export class ApplicationFeesComponent extends AbstractComponent implements OnIni
 
   get dbTrials() {
     return this.jsonRepoData?.trials ?? [];
+  }
+  get dbClassLevels() {
+    return this.jsonRepoData?.classLevels ?? [];
   }
   get dbTrialLoadDate() {
     return displayDate(<any>formatDate(this.jsonRepoData?.trialLoadedAt ?? '', dateTimeFormat, LSLanguage()));
@@ -92,12 +101,13 @@ export class ApplicationFeesComponent extends AbstractComponent implements OnIni
   }
 
   addRecordEntry(v: number) {
-    const newRecord = {
+    const newRecord: PaymentRecordModel = {
       name: '',
       identifier: '',
       classLevel: '',
       section: '',
       money: { amount: 0, currency: Currency.XAF.toUpperCase() },
+      feeAmount: { amount: 0, currency: Currency.XAF.toUpperCase() },
     }
     this.records.push(newRecord);
     this.dbUpdateRecords();
@@ -105,11 +115,22 @@ export class ApplicationFeesComponent extends AbstractComponent implements OnIni
 
   dbTrialSelectAction($event: DropdownChangeEvent, record: PaymentRecordModel) {
     const trial = $event.value as StudentApplicationTrialPayload;
+
+    if (!trial.studentApplicationTrial.id) return;
     record.classLevel = trial.classLevel;
     record.section = trial.section;
     record.name = trial.student.name ?? '';
     record.identifier = trial.student.accountId ?? '';
     record.trialId = trial.studentApplicationTrial.id;
+    record.feeAmount = trial.tuitionPaymentStatus.feeAmount;
+  }
+
+  dbClassLevelSelectAction($event: DropdownChangeEvent, record: PaymentRecordModel) {
+    const classLevel = $event.value as LaunchClassLevelModel;
+    record.classLevel = classLevel.name;
+    record.section = classLevel.section;
+    record.feeAmount = classLevel.feeAmount;
+    console.log(classLevel);
   }
 
   recordView = (record: PaymentRecordModel) => {
@@ -122,20 +143,17 @@ export class ApplicationFeesComponent extends AbstractComponent implements OnIni
     this.dbUpdateRecords();
     this.selectedRecord = record;
     const selectedRecordTrial = this.selectedRecordTrial;
-    if (!selectedRecordTrial) return;
-    else {
-      this.printReceipt = true;
-      this.selectedTrialDetail = {
-        payload: selectedRecordTrial,
-        record: record,
-        school: this.currentSchool!
-      }
+    this.selectedTrialDetail = {
+      payload: selectedRecordTrial,
+      record: record,
+      school: this.currentSchool!
     }
+    this.printReceipt++;
   }
-  printReceipt = false;
-  protected readonly formatMoney = formatMoney;
-  protected readonly tuitionPaymentsSumAsMoney = tuitionPaymentsSumAsMoney;
-  protected readonly displayDate = displayDate;
+  feeAmountForClassLevel(record: PaymentRecordModel) {
+    if (!record.feeAmount) return '';
+    return $localize `Fee amount for this class: ${formatMoney(record.feeAmount)}`;
+  }
 }
 
 const SatFilterFormModel = new FormModel<TrialFilterParams>({

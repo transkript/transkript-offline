@@ -7,5 +7,6 @@ export interface PaymentRecordModel {
   classLevel: string,
   section: string,
   money: Money,
-  trialId?: Id
+  trialId?: Id,
+  feeAmount: Money
 }
