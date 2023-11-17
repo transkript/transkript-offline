@@ -1,5 +1,4 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
-import { CommonModule } from '@angular/common';
 import {FormModel} from "../../../models/data/form.model";
 import {FormControlAttributes} from "../../../models/data/form-control.model";
 import {AbstractControl, FormBuilder, FormControl, FormGroup} from "@angular/forms";
@@ -60,7 +59,7 @@ import {formatDateTime, today} from "../../../../../config/util/date.util";
     </div>
   `
 })
-export class FilterComponent  implements OnInit, OnChanges {
+export class FilterComponent implements OnInit, OnChanges {
   @Input()
   formModel?: FormModel;
   @Output()

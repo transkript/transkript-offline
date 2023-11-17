@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {CommonModule, registerLocaleData} from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import {RouterOutlet} from '@angular/router';
 import {SharedModule} from "./modules/shared.module";
 import en from '@angular/common/locales/en';
 import fr from '@angular/common/locales/fr';

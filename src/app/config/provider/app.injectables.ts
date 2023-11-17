@@ -1,10 +1,11 @@
 import {Renderer2, Type} from "@angular/core";
 import {AbstractHttpService} from "../../services/http/abstract-http.service";
 import {TrialService} from "../../services/http/trial.service";
-import {HTTP_INTERCEPTORS, HttpClient, HttpHandler} from "@angular/common/http";
+import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import {AuthInterceptor} from "../interceptor/auth.interceptor";
 import {ErrorInterceptor} from "../interceptor/error.interceptor";
 import {ConfirmationService, MessageService} from "primeng/api";
+import {LocaleProvider} from "../../services/util/locale-provider.service";
 
 type HttpAppServiceInjectable = { provide: Type<AbstractHttpService>, useClass: Type<AbstractHttpService> }
 
@@ -21,6 +22,7 @@ const angularServiceInjectables = [
   interceptorInjectable(ErrorInterceptor),
   {provide: Renderer2, useClass: Renderer2},
 ];
+
 const primengServiceInjectables: Array<any> = [
   {provide: MessageService, useClass: MessageService},
   {provide: ConfirmationService, useClass: ConfirmationService},
@@ -30,4 +32,5 @@ export const AppServiceInjectables = [
   ...angularServiceInjectables,
   primengServiceInjectables,
   httpAppServiceInjectables,
+  [LocaleProvider]
 ];

@@ -7,7 +7,7 @@ type AppRouteType = {
 }
 
 export const AppRoutes: AppRouteType = {
-  name: $localize `Routes`,
+  name: $localize`Routes`,
   main: '/',
   auth: {
     main: '/auth',
@@ -62,6 +62,7 @@ export const AppRoutes: AppRouteType = {
     },
   },
 };
+
 export class AppRoute {
   static APP_MAIN = new AppRoute("app.home");
   static APP_MAIN_FEES = new AppRoute("app.fees");

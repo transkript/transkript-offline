@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {InputTextModule} from "primeng/inputtext";
 import {PasswordModule} from "primeng/password";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -15,7 +15,6 @@ import {ToggleButtonModule} from "primeng/togglebutton";
 import {InputNumberModule} from "primeng/inputnumber";
 import {TooltipModule} from "primeng/tooltip";
 import {DialogModule} from "primeng/dialog";
-
 
 
 @NgModule({
@@ -58,4 +57,5 @@ import {DialogModule} from "primeng/dialog";
     DialogModule,
   ]
 })
-export class SharedModule { }
+export class SharedModule {
+}

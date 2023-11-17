@@ -1,6 +1,6 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { PrintReceiptService } from './print-receipt.service';
+import {PrintReceiptService} from './print-receipt.service';
 
 describe('PrintReceiptService', () => {
   let service: PrintReceiptService;

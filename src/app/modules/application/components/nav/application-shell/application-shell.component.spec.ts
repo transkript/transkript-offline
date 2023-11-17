@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ApplicationShellComponent } from './application-shell.component';
+import {ApplicationShellComponent} from './application-shell.component';
 
 describe('ApplicationShellComponent', () => {
   let component: ApplicationShellComponent;
@@ -10,8 +10,8 @@ describe('ApplicationShellComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ApplicationShellComponent]
     })
-    .compileComponents();
-    
+      .compileComponents();
+
     fixture = TestBed.createComponent(ApplicationShellComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

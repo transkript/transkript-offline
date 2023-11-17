@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import { CommonModule } from '@angular/common';
 import {EnumOptions} from "../../../../models/base/base.enum";
 import {LocalStorageService} from "../../../../services/http/local-storage.service";
 import {LocaleProviderService} from "../../../../services/util/locale-provider.service";

@@ -1,6 +1,6 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { PrintHtmlService } from './print-html.service';
+import {PrintHtmlService} from './print-html.service';
 
 describe('PrintHtmlService', () => {
   let service: PrintHtmlService;

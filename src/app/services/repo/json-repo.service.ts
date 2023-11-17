@@ -20,10 +20,7 @@ export class JsonRepoService {
     academicYears: [],
   }
 
-  constructor(private localStorage: LocalStorageService) { }
-
-  private database = async () => {
-    return LocalStoragePreset<JsonRepo>('_transkript_db', this.defaultData);
+  constructor(private localStorage: LocalStorageService) {
   }
 
   data = async () => {
@@ -33,13 +30,13 @@ export class JsonRepoService {
     return db.data;
   }
 
-  retrieve = async <T extends JsonRepoValueTypes> (k: keyof JsonRepo): Promise<T | undefined> => {
+  retrieve = async <T extends JsonRepoValueTypes>(k: keyof JsonRepo): Promise<T | undefined> => {
     const data = await this.data();
     this.accessSubject.next("r");
     return data[k] as T;
   }
 
-  update = async <T extends JsonRepoValueTypes> (k: keyof JsonRepo, data: T) => {
+  update = async <T extends JsonRepoValueTypes>(k: keyof JsonRepo, data: T) => {
     const db = await this.database();
     db.data[k] = <any>data;
     db.write();
@@ -48,12 +45,20 @@ export class JsonRepoService {
     return db.data;
   }
 
-  updateAll= async (values: {key: keyof JsonRepo, data: JsonRepoValueTypes}[]) => {
-    const results = values.map(v =>  this.update(v.key, v.data));
-    return results[results.length];
+  updateAll = async (values: { key: keyof JsonRepo, data: JsonRepoValueTypes }[]) => {
+    let res;
+    for (let i = 0; i < values.length; i++) {
+      const v = values[i];
+      res = await this.update(v.key, v.data)
+    }
+    return res;
   }
 
-  private postUpdate <T extends JsonRepoValueTypes>(k: keyof JsonRepo, data: T) {
+  private database = async () => {
+    return LocalStoragePreset<JsonRepo>('_transkript_db', this.defaultData);
+  }
+
+  private postUpdate<T extends JsonRepoValueTypes>(k: keyof JsonRepo, data: T) {
     if (k == "currentSchool") {
       this.localStorage.set("school_id", (data as SchoolModel).id);
     }

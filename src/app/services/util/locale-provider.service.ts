@@ -5,11 +5,11 @@ import {LSLanguage} from "../http/local-storage.service";
   providedIn: 'root'
 })
 export class LocaleProviderService extends String {
-  private readonly langCode: string = navigator.language;
+  private readonly langCode: string = this.navlang;
 
   constructor() {
     super();
-    const browserLocale = navigator.language;
+    const browserLocale = this.navlang;
     const supportedLocales = ['en', 'fr'];
     let language = '';
 
@@ -20,18 +20,30 @@ export class LocaleProviderService extends String {
       }
     }
 
-    if (language === '') {
-      language = LSLanguage();
-    } else {
-      if (LSLanguage() != 'en') {
-        language = LSLanguage()
+    try {
+      if (language === '') {
+        language = LSLanguage();
+      } else {
+        if (LSLanguage() != 'en') {
+          language = LSLanguage()
+        }
       }
+    } catch (e) {
+
     }
     this.langCode = language;
   }
 
-  override toString(): string {
+  get navlang() {
+    try {
+      return navigator.language
+    } catch (e) {
+      return 'en';
+    }
+  }
 
+  override toString(): string {
+    console.log(this.langCode)
     return this.langCode;
   }
 

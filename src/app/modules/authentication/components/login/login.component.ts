@@ -1,7 +1,5 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {SharedModule} from "../../../shared.module";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {Component} from '@angular/core';
+import {FormBuilder, Validators} from "@angular/forms";
 import {AuthService} from "../../../../services/http/auth.service";
 import {LoginRequestModel} from "../../../../models/auth/login.model";
 import {LocalStorageService} from "../../../../services/http/local-storage.service";
@@ -33,7 +31,7 @@ export class LoginComponent {
 
 
   loginAction() {
-    const request = <LoginRequestModel> this.loginForm.value;
+    const request = <LoginRequestModel>this.loginForm.value;
     this.authService.login(request).subscribe(res => {
       this.localStorage.set("access_token", res.token);
       this.loadApplication();

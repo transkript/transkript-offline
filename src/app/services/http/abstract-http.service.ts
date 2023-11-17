@@ -24,9 +24,9 @@ export abstract class AbstractHttpService<E = any, P = any> {
 
   urlWithPath = (path: string) => `${this.url}${path}`
 
-  list = <PAYLOAD = P> (filter: BaseFilter<any>, path: string = '/list'): Observable<PAYLOAD[]> => this.listT(filter, {path: path})
+  list = <PAYLOAD = P>(filter: BaseFilter<any>, path: string = '/list'): Observable<PAYLOAD[]> => this.listT(filter, {path: path})
 
-  listDto = <ENTITY = E> (filter: BaseFilter<any>): Observable<ENTITY[]> => this.listT(filter, {path: '/list-dto'})
+  listDto = <ENTITY = E>(filter: BaseFilter<any>): Observable<ENTITY[]> => this.listT(filter, {path: '/list-dto'})
 
   listT = <MODEL>(filter: BaseFilter<any>, options?: HttpFilterOptions): Observable<MODEL> => {
     if (!options) options = {}

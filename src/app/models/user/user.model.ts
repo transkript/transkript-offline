@@ -1,6 +1,6 @@
 import {Id, LocalDateTimeType} from "../base/base.types";
 
-export interface UserModel{
+export interface UserModel {
   id?: Id,
   createdAt?: LocalDateTimeType,
   updatedAt?: LocalDateTimeType,

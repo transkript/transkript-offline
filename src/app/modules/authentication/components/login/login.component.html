@@ -3,20 +3,21 @@
     <div class="text-900 text-3xl font-medium mb-3" i18n>Welcome Back</div>
   </div>
 
-  <form [formGroup]="loginForm" class="grid formgrid" (submit)="loginAction()">
+  <form (submit)="loginAction()" [formGroup]="loginForm" class="grid formgrid">
     <div class="col-12 mb-2">
-      <label for="username" class="block text-900 font-medium mb-2" i18n>Username / Email</label>
-      <input pInputText id="username" placeholder="Username" formControlName="username" class="w-full mb-3 p-inputtext-sm"/>
+      <label class="block text-900 font-medium mb-2" for="username" i18n>Username / Email</label>
+      <input class="w-full mb-3 p-inputtext-sm" formControlName="username" id="username" pInputText
+             placeholder="Username"/>
     </div>
     <div class="col-12 mb-2">
-      <label for="password" class="block text-900 font-medium mb-2" i18n>Password</label>
+      <label class="block text-900 font-medium mb-2" for="password" i18n>Password</label>
       <p-password
         [feedback]="false" [inputStyle]="{'width':'100%'}" [toggleMask]="true"
         formControlName="password" id="password" styleClass="p-input-text w-full p-inputtext-sm"></p-password>
     </div>
 
     <div class="col-12 mb-2">
-      <button pButton i18n-label label="Sign In" class="w-full p-button-sm" type="submit"></button>
+      <button class="w-full p-button-sm" i18n-label label="Sign In" pButton type="submit"></button>
     </div>
   </form>
 </div>

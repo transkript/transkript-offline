@@ -1,6 +1,4 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {MenuModule} from "primeng/menu";
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-application-home',

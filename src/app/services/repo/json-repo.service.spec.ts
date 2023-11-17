@@ -1,6 +1,6 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { JsonRepoService } from './json-repo.service';
+import {JsonRepoService} from './json-repo.service';
 
 describe('JsonRepoService', () => {
   let service: JsonRepoService;

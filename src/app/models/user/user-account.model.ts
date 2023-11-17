@@ -1,7 +1,7 @@
 import {Id, LocalDateTimeType} from "../base/base.types";
 import {SchoolModel} from "../school/school.model";
 
-export interface UserAccountModel{
+export interface UserAccountModel {
   id?: Id,
   createdAt?: LocalDateTimeType,
   updatedAt?: LocalDateTimeType,

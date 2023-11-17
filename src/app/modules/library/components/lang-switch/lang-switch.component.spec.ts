@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { LangSwitchComponent } from './lang-switch.component';
+import {LangSwitchComponent} from './lang-switch.component';
 
 describe('LangSwitchComponent', () => {
   let component: LangSwitchComponent;
@@ -10,8 +10,8 @@ describe('LangSwitchComponent', () => {
     await TestBed.configureTestingModule({
       imports: [LangSwitchComponent]
     })
-    .compileComponents();
-    
+      .compileComponents();
+
     fixture = TestBed.createComponent(LangSwitchComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

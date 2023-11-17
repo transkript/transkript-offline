@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {AbstractHttpService} from "./abstract-http.service";
 import {HttpClient} from "@angular/common/http";
 import {UserPayload} from "../../models/user/user.payload";

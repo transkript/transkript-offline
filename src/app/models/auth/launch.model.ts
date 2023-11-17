@@ -35,7 +35,7 @@ export interface SchoolStats {
   numberOfSubjects: number
 }
 
-export interface LaunchClassLevelModel{
+export interface LaunchClassLevelModel {
   id: Id,
   name: string
   section: string

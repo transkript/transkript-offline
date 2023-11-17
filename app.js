@@ -1,10 +1,10 @@
 const fs = require("fs");
-const { v4: uuidv4 } = require("uuid");
+const {v4: uuidv4} = require("uuid");
 const express = require('express');
 const app = express();
 const path = require('path');
 const cors = require('cors');
-const { masterToPDF } = require('relaxedjs');
+const {masterToPDF} = require('relaxedjs');
 const puppeteer = require('puppeteer');
 const plugins = require('relaxedjs/src/plugins');
 
@@ -89,11 +89,11 @@ const printH2P = async (model, res) => {
   const cleanUp = () => {
     try {
       cleanUpCallbacks.forEach(clean => clean());
-    } catch(e) {
+    } catch (e) {
     }
   }
 
-  let { name, html } = model;
+  let {name, html} = model;
   if (!name.endsWith(".pdf")) name += ".pdf"
   const templatePath = path.resolve(workdir, `template-${uuidv4()}.html`);
   const tempHTMLPath = path.resolve(workdir, `temp-${uuidv4()}.html`);

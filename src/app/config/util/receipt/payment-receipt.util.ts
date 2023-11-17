@@ -8,7 +8,7 @@ import {tuitionPaymentsSumAsMoney} from "../../../models/payment/payment-tuition
 import {formatMoney} from "../../../models/base/money.model";
 import {SchoolModel} from "../../../models/school/school.model";
 
-const html=  `
+const html = `
     <!DOCTYPE html>
     <html lang="en, id">
     <head>
@@ -32,9 +32,9 @@ const html=  `
       body {
         font-family: 'Comfortaa', Arial, sans-serif;
         font-size: 0.72em;
-        background-color: #dcdcdc;
-        transform: scale(0.7,0.7);
-        transform-origin: top left right;
+        margin: 0;
+        transform: scale(1, 1);
+        transform-origin: right left;
         width: 100%
       }
 
@@ -43,9 +43,14 @@ const html=  `
       }
 
       @media print {
+        @page {
+          size: landscape;
+          margin: 0.5cm;
+        }
         body {
-          transform: scale(0.7,0.7);
-          transform-origin: top left right;
+          margin: 0;
+          transform: scale(1, 1);
+          transform-origin: right left;
         }
 
         .copyright {
@@ -304,7 +309,6 @@ const html=  `
     `
 
 
-
 export const paymentReceipt = (trialDetail: {
   payload?: StudentApplicationTrialPayload,
   record: PaymentRecordModel,
@@ -321,18 +325,18 @@ export const paymentReceipt = (trialDetail: {
   const feeAmnt = formatMoney(trialDetail.payload?.tuitionPaymentStatus.feeAmount ?? trialDetail.record.feeAmount);
   const feeOwed = formatMoney(trialDetail.payload?.tuitionPaymentStatus.owed ?? (() => {
     const owed = trialDetail.record.feeAmount.amount - trialDetail.record.money.amount;
-    return { amount: owed, currency: trialDetail.record.feeAmount.currency}
+    return {amount: owed, currency: trialDetail.record.feeAmount.currency}
   })());
   const feePaid = tuitionPaymentsSumAsMoney(payments);
 
-  const classLevel = `${trialDetail.payload?.classLevel ?? trialDetail.record.classLevel} - ${trialDetail.payload?.section?? trialDetail.record.section}`
+  const classLevel = `${trialDetail.payload?.classLevel ?? trialDetail.record.classLevel} - ${trialDetail.payload?.section ?? trialDetail.record.section}`
 
   const template = Handlebars.compile(html);
 
   return template({
     value_school_name: trialDetail.school.name,
     value_school_code: trialDetail.school.code ?? '',
-    value_student_name: trialDetail.payload?.student.name ,
+    value_student_name: trialDetail.payload?.student.name,
     value_student_identifier: trialDetail.payload?.student.accountId ?? trialDetail.record.identifier,
     value_student_class_level: classLevel,
     value_created_on: displayDate(<any>formatDate(today(), dateTimeFormat, LSLanguage())),
@@ -341,7 +345,7 @@ export const paymentReceipt = (trialDetail: {
     value_fee_paid: feePaid,
     value_payments: payments.map((p, index) => {
       return {
-        desc: $localize `Payment ${index+1}`,
+        desc: $localize`Payment ${index + 1}`,
         date: displayDate(<any>p.paymentDate),
         amnt: formatMoney(p.money),
       }

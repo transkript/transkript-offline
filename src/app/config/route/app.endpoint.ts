@@ -78,15 +78,16 @@ type AppEndpointType = {
   [c: string]: string | AppEndpointType
   path: string,
 }
+
 export class AppEndpoint {
 
-  private _base: string = "";
-  private _path: string = "";
-  private readonly _url: string
   static AUTH_LOGIN = new AppEndpoint("auth.login");
   static AUTH_LAUNCH = new AppEndpoint("launch");
   static STUDENT_APPLICATION_TRIAL = new AppEndpoint("student_application_trial");
   static USER = new AppEndpoint("user");
+  private _base: string = "";
+  private _path: string = "";
+  private readonly _url: string
 
   constructor(key: string) {
     this._url = this.constructUrl(key);

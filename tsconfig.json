@@ -21,7 +21,6 @@
     "useDefineForClassFields": false,
     "allowJs": true,
     "checkJs": false,
-
     "lib": [
       "ES2022",
       "dom"

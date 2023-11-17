@@ -1,5 +1,4 @@
 export const environment = {
-  apiUrl: "https://transkript-be.azurewebsites.net/api",
+  apiUrl: "https://transkript-proxy.azurewebsites.net/api",
   profile: 'prod'
-
 };

@@ -1,7 +1,7 @@
 import * as luxon from "luxon";
+import {DateTimeFormatOptions} from "luxon";
 import {LocalDateTimeType, LocalDateType, LocalTimeType} from "../../models/base/base.types";
 import {LSLanguage} from "../../services/http/local-storage.service";
-import {DateTimeFormatOptions} from "luxon";
 import {titlecase} from "./string.util";
 
 export const DateTime = luxon.DateTime

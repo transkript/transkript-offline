@@ -1,7 +1,6 @@
 import {Component, OnInit, Renderer2} from '@angular/core';
 import {TrialService} from "../../../../../services/http/trial.service";
-import {BaseFilter, SchoolBaseFilter} from "../../../../../config/filter/base.filter";
-import {Subject, Subscription} from "rxjs";
+import {Subscription} from "rxjs";
 import {FormControlModel} from "../../../../library/models/data/form-control.model";
 import {FormModel} from "../../../../library/models/data/form.model";
 import {TrialFilter, TrialFilterParams} from "../../../../../config/filter/trial.filter";
@@ -26,23 +25,22 @@ import {LaunchClassLevelModel} from "../../../../../models/auth/launch.model";
   styleUrl: './application-fees.component.scss'
 })
 export class ApplicationFeesComponent extends AbstractComponent implements OnInit {
-  private dataLoad$?: Subscription;
   selectedYear?: YearModel;
   records: PaymentRecordModel[] = [];
   loadingStudentData = false;
   studentDetailsDialogVisible = false;
   selectedRecord?: PaymentRecordModel;
   printReceipt = 0;
-  protected readonly formatMoney = formatMoney;
-  protected readonly tuitionPaymentsSumAsMoney = tuitionPaymentsSumAsMoney;
-  protected readonly displayDate = displayDate;
-
-
   selectedTrialDetail?: {
     payload?: StudentApplicationTrialPayload,
     record: PaymentRecordModel,
     school: SchoolModel,
   }
+  protected readonly formatMoney = formatMoney;
+  protected readonly tuitionPaymentsSumAsMoney = tuitionPaymentsSumAsMoney;
+  protected readonly displayDate = displayDate;
+  protected readonly picon = picon;
+  private dataLoad$?: Subscription;
 
   constructor(
     private trialService: TrialService,
@@ -52,16 +50,14 @@ export class ApplicationFeesComponent extends AbstractComponent implements OnIni
     super();
   }
 
-  ngOnInit() {
-    this.jsonRepoDataAsync().then(data => this.records = data.paymentRecords ?? []);
-  }
-
   get dbTrials() {
     return this.jsonRepoData?.trials ?? [];
   }
+
   get dbClassLevels() {
     return this.jsonRepoData?.classLevels ?? [];
   }
+
   get dbTrialLoadDate() {
     return displayDate(<any>formatDate(this.jsonRepoData?.trialLoadedAt ?? '', dateTimeFormat, LSLanguage()));
   }
@@ -69,6 +65,10 @@ export class ApplicationFeesComponent extends AbstractComponent implements OnIni
   get selectedRecordTrial() {
     if (this.selectedRecord == undefined) return undefined;
     return this.dbTrials.find(t => t.studentApplicationTrial.id == this.selectedRecord?.trialId);
+  }
+
+  ngOnInit() {
+    this.jsonRepoDataAsync().then(data => this.records = data.paymentRecords ?? []);
   }
 
   loadStudentAction() {
@@ -80,19 +80,22 @@ export class ApplicationFeesComponent extends AbstractComponent implements OnIni
 
     this.dataLoad$ = this.trialService.list(filter).subscribe(res => {
       this.loadingStudentData = false;
-      this.jsonRepoService.updateAll([
-        { key: "trials", data: res },
-        { key: "trialLoadedAt", data: new Date() },
-      ]).then();
+      this.jsonRepoService.update("trials", res).then();
+      this.jsonRepoService.update("trialLoadedAt", new Date()).then();
     });
   }
 
   getSchoolYears = () => {
     const schoolId = this.jsonRepoData?.currentSchool?.id;
-    if (schoolId==undefined) return [];
-    return (this.jsonRepoData?.academicYears ?? []).filter(y=> y.schoolId == schoolId);
+    if (schoolId == undefined) return [];
+    let years = this.jsonRepoData?.academicYears ?? [];
+    if (years.length == 0) {
+      this.jsonRepoService.retrieve<YearModel[]>("academicYears").then(r => {
+        if (r) years = r
+      });
+    }
+    return years.filter(y => y.schoolId == schoolId);
   }
-  protected readonly picon = picon;
 
   dbUpdateRecords = () => {
     this.jsonRepoService.update("paymentRecords", this.records).then(data => {
@@ -106,8 +109,8 @@ export class ApplicationFeesComponent extends AbstractComponent implements OnIni
       identifier: '',
       classLevel: '',
       section: '',
-      money: { amount: 0, currency: Currency.XAF.toUpperCase() },
-      feeAmount: { amount: 0, currency: Currency.XAF.toUpperCase() },
+      money: {amount: 0, currency: Currency.XAF.toUpperCase()},
+      feeAmount: {amount: 0, currency: Currency.XAF.toUpperCase()},
     }
     this.records.push(newRecord);
     this.dbUpdateRecords();
@@ -150,9 +153,37 @@ export class ApplicationFeesComponent extends AbstractComponent implements OnIni
     }
     this.printReceipt++;
   }
+
+  recordsExportToExcel = () => {
+    const header = ['sn', 'name', 'regNum', 'classLevel', 'section', 'amount'];
+    const body: { [p: string]: any }[] = [];
+    this.records.forEach((record, index) => {
+      const row: { [p: string]: any } = {
+        sn: index + 1,
+        name: record.name,
+        regNum: record.identifier,
+        classLevel: record.classLevel,
+        section: record.section,
+        amount: record.money.amount,
+      };
+      body.push(row);
+    });
+    const table = {head: header, body: body}
+    import('xlsx').then(xlsx => {
+      const jsonTable = table;
+      const worksheet = xlsx.utils.json_to_sheet(jsonTable.body, {
+        header: jsonTable.head
+      });
+      const maxWidth = jsonTable.head.reduce((w, r) => Math.max(w, r.length), 32);
+      worksheet["!cols"] = [{wch: maxWidth}];
+      const workbook = {Sheets: {data: worksheet}, SheetNames: ['data']};
+      xlsx.writeFile(workbook, "file.xlsx", {compression: true});
+    });
+  }
+
   feeAmountForClassLevel(record: PaymentRecordModel) {
     if (!record.feeAmount) return '';
-    return $localize `Fee amount for this class: ${formatMoney(record.feeAmount)}`;
+    return $localize`Fee amount for this class: ${formatMoney(record.feeAmount)}`;
   }
 }
 

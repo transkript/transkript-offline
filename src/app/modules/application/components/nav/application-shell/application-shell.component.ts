@@ -1,7 +1,4 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {MenuModule} from "primeng/menu";
-import {ApplicationNavSidebarComponent} from "../application-nav-sidebar/application-nav-sidebar.component";
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-application-shell',

@@ -1,18 +1,22 @@
 <div class="card">
   <div>
     <small *ngIf="dbTrials != undefined" class="block bg-primary-500 p-2 border-round text-white" i18n>
-      Student data from the online system has been loaded. Please select the academic and click the button below to reload.
+      Student data from the online system has been loaded. Please select the academic and click the button below to
+      reload.
     </small>
     <small *ngIf="dbTrials == undefined" class="block bg-red-500 p-2 border-round text-white">
-      Student data from the online system has not been loaded yet. Please select the academic year and click the button below to continue
+      Student data from the online system has not been loaded yet. Please select the academic year and click the button
+      below to continue
     </small>
   </div>
   <div class="shadow-1 border-round-sm m-2 p-2 flex gap-2 align-content-center">
     <div>
-      <p-dropdown [(ngModel)]="selectedYear" placeholder="Select Academic Year" styleClass="w-full p-inputtext-sm"  [options]="getSchoolYears()" optionLabel="name"></p-dropdown>
+      <p-dropdown [(ngModel)]="selectedYear" [options]="getSchoolYears()" i18n-placeholder
+                  optionLabel="name" placeholder="Select Academic Year" styleClass="w-full p-inputtext-sm"></p-dropdown>
     </div>
     <div>
-      <p-button [disabled]="selectedYear == undefined" label="Load Student Data" (click)="loadStudentAction()" [loading]="loadingStudentData" styleClass="p-button-sm"></p-button>
+      <p-button (click)="loadStudentAction()" [disabled]="selectedYear == undefined" [loading]="loadingStudentData"
+                i18n-label label="Load Student Data" styleClass="p-button-sm"></p-button>
     </div>
     <div *ngIf="jsonRepoData?.trialLoadedAt">
       <span i18n>Student data was last loaded on: {{dbTrialLoadDate}}</span>
@@ -34,19 +38,20 @@
         <tr>
           <td>
             <p-dropdown
-              appendTo="body" [(ngModel)]="record.name"
-              [options]="dbTrials" optionLabel="student.name" [editable]="true" [filter]="true"
-              [virtualScroll]="true" [virtualScrollItemSize]="20" styleClass="p-inputtext-sm"
-              (onChange)="dbTrialSelectAction($event, record)"></p-dropdown>
+              (onChange)="dbTrialSelectAction($event, record)" [(ngModel)]="record.name"
+              [editable]="true" [filter]="true" [options]="dbTrials" [virtualScrollItemSize]="20"
+              [virtualScroll]="true" appendTo="body" optionLabel="student.name"
+              styleClass="p-inputtext-sm"></p-dropdown>
           </td>
           <td>
             {{record.identifier}}
           </td>
           <td>
             <p-dropdown
-              [pTooltip]="feeAmountForClassLevel(record)" [ngModel]="record.classLevel" [options]="dbClassLevels" [editable]="true" [filter]="true"
-              appendTo="body" styleClass="p-inputtext-sm" optionLabel="name"
-              (onChange)="dbClassLevelSelectAction($event, record)"></p-dropdown>
+              (onChange)="dbClassLevelSelectAction($event, record)" [editable]="true" [filter]="true"
+              [ngModel]="record.classLevel" [options]="dbClassLevels"
+              [pTooltip]="feeAmountForClassLevel(record)" appendTo="body" optionLabel="name"
+              styleClass="p-inputtext-sm"></p-dropdown>
           </td>
           <td>
             {{record.section}}
@@ -56,10 +61,16 @@
           </td>
           <td>
             <div class="flex gap-1">
-              <p-button (click)="recordView(record)" label="View" i18n-label styleClass="p-button-sm"></p-button>
-              <p-button (click)="dbUpdateRecords()" label="Save" i18n-label styleClass="p-button-sm"></p-button>
+              <p-button
+                (click)="recordView(record)" [icon]="picon('eye')" i18n-pTooltip
+                pTooltip="View" styleClass="p-button-sm p-button-rounded p-button-info" tooltipPosition="bottom"></p-button>
+              <p-button
+                (click)="dbUpdateRecords()" [icon]="picon('save')" i18n-pTooltip
+                pTooltip="Save" styleClass="p-button-sm p-button-rounded" tooltipPosition="bottom"></p-button>
               <br>
-              <p-button (click)="recordPrintReceipt(record)" label="Print" i18n-label styleClass="p-button-sm"></p-button>
+              <p-button
+                (click)="recordPrintReceipt(record)" [icon]="picon('print')" i18n-pTooltip
+                pTooltip="Print" styleClass="p-button-sm p-button-rounded p-button-secondary" tooltipPosition="bottom"></p-button>
             </div>
           </td>
         </tr>
@@ -71,7 +82,10 @@
               <p-inputNumber #entryInput [max]="20" [min]="1" inputStyleClass="p-inputtext-sm"
                              styleClass="w-full"></p-inputNumber>
               <p-button (click)="addRecordEntry(entryInput.value ?? 1)" [icon]="picon('plus')"
-                        i18n-pTooltip pTooltip="Add {{entryInput.value ?? 1}} student entries" styleClass="p-button-sm p-button-icon"></p-button>
+                        i18n-pTooltip pTooltip="Add {{entryInput.value ?? 1}} student entries"
+                        styleClass="p-button-sm p-button-icon"></p-button>
+              <p-button (click)="recordsExportToExcel()" i18n-label label="Export to excel"
+                        styleClass="p-button-sm p-button-icon"></p-button>
             </div>
           </td>
         </tr>
@@ -81,12 +95,13 @@
 </div>
 
 <p-dialog
-  [(visible)]="studentDetailsDialogVisible" [draggable]="false" [modal]="true" [resizable]="false" [style]="{ width: '50vw' }"
+  [(visible)]="studentDetailsDialogVisible" [draggable]="false" [modal]="true" [resizable]="false"
+  [style]="{ width: '50vw' }"
   header="Student Details" i18n-header>
   <p-table *ngIf="selectedRecordTrial"
-    [value]="selectedRecordTrial.tuitionPaymentStatus.payments" dataKey="tuitionPaymentId"
-    i18n-title
-    selectionMode="multiple" title="Tuition Details">
+           [value]="selectedRecordTrial.tuitionPaymentStatus.payments" dataKey="tuitionPaymentId"
+           i18n-title
+           selectionMode="multiple" title="Tuition Details">
     <ng-template pTemplate="caption">
       <div class="grid">
         <div class="col-12 md:col-3 block">
@@ -122,7 +137,8 @@
 </p-dialog>
 
 
-<app-payment-receipt *ngIf="printReceipt" [print]="printReceipt" [trialDetail]="selectedTrialDetail"></app-payment-receipt>
+<app-payment-receipt *ngIf="printReceipt" [print]="printReceipt"
+                     [trialDetail]="selectedTrialDetail"></app-payment-receipt>
 <p-dialog>
 
 </p-dialog>

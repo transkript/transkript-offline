@@ -9,7 +9,7 @@ export abstract class AbstractComponent {
   protected jsonRepoData?: JsonRepo;
 
   protected constructor() {
-    this.jsonRepoService= inject(JsonRepoService);
+    this.jsonRepoService = inject(JsonRepoService);
     this.jsonRepoService.retrieve<UserPayload>("currentUser").then(res => {
       this.currentUser = res;
     });
@@ -17,8 +17,9 @@ export abstract class AbstractComponent {
   }
 
   get currentUsername() {
-    return this.currentUser?.account?.name?? 'User';
+    return this.currentUser?.account?.name ?? 'User';
   }
+
   get currentSchool() {
     return this.jsonRepoData?.currentSchool;
   }
@@ -27,13 +28,13 @@ export abstract class AbstractComponent {
     return this.jsonRepoData?.currentUser?.account?.schools ?? [];
   }
 
+  jsonRepoDataAsync = async () => {
+    return this.jsonRepoService.data();
+  }
+
   private loadData() {
     this.jsonRepoService.data().then(res => {
       this.jsonRepoData = res;
     });
-  }
-
-  jsonRepoDataAsync= async () => {
-    return this.jsonRepoService.data();
   }
 }

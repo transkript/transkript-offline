@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ApplicationNavSidebarComponent } from './application-nav-sidebar.component';
+import {ApplicationNavSidebarComponent} from './application-nav-sidebar.component';
 
 describe('ApplicationNavSidebarComponent', () => {
   let component: ApplicationNavSidebarComponent;
@@ -10,8 +10,8 @@ describe('ApplicationNavSidebarComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ApplicationNavSidebarComponent]
     })
-    .compileComponents();
-    
+      .compileComponents();
+
     fixture = TestBed.createComponent(ApplicationNavSidebarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

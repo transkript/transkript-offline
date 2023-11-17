@@ -14,6 +14,7 @@ export interface OrganisationBaseFilterParams extends BaseFilterParams {
 export interface SchoolBaseFilterParams extends OrganisationBaseFilterParams {
   schoolId?: Id
 }
+
 export abstract class BaseFilter<T> extends HttpParams {
   private readonly _parameters: { [p: string]: any } = {};
 

@@ -5,9 +5,10 @@ import {Injectable, Renderer2} from '@angular/core';
 })
 export class PrintReceiptService {
 
-  constructor() { }
+  constructor() {
+  }
 
-  document( renderer: Renderer2) {
+  document(renderer: Renderer2) {
     const html = `
     <h1>Hello, World!</h1>
 
@@ -22,7 +23,7 @@ export class PrintReceiptService {
 
     // Retrieve the rendered HTML as a string
     const renderedHtml = tempDiv.innerHTML;
-console.log(renderedHtml)
+    console.log(renderedHtml)
     return renderedHtml // Output the rendered HTML st
   }
 }
